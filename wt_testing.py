@@ -2,7 +2,7 @@ import pywt
 import numpy as np
 
 data = np.ones((4,4),dtype=np.float64)
-wavelet = pywt.Wavelet('db3')
+wavelet = pywt.Wavelet('db5')
 #wavelet = pywt.ContinuousWavelet('fbsp')
 coeffs = pywt.dwt2(data, 'coif1')
 cA,(cH,cV,cD) = coeffs
@@ -20,7 +20,7 @@ print(cD)
 print("-")
 print("size", cA.size, cH.size, cV.size, cD.size)
 print("-")
-#print(wavelet)
+print(wavelet)
 #print(pywt.wavelist())
 
 phi, psi, x = wavelet.wavefun(level=2)

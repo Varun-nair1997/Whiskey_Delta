@@ -40,10 +40,6 @@ def GAWN(imgA):
     C_I = gauss + imgA
     C_I = np.clip(C_I, 0, 255)
     C_I = C_I.astype(np.uint8)
-    cv2.imshow("abc", C_I)
-    cv2.waitKey()
-    print(C_I-C_I_copy)
-    print(imgA)
     return C_I_copy
 
 
@@ -123,7 +119,7 @@ def wavelet_denoising(img, wavelet=pywt.Wavelet('db5')):
 
 
 if __name__ == "__main__":
-    img = cv2.imread("DSC8.JPG", 0)
+    img = cv2.imread("DSC1.jpeg", 0)
     imgA = np.asarray(img)  # imgA is the image as an Array
     wavelet_denoising(imgA)
 

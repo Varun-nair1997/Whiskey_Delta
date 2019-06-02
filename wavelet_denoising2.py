@@ -7,8 +7,6 @@ __author__ = "Varun Nair"
 import numpy as np
 import cv2
 import pywt
-import datetime
-
 
 def bc_e(imgA, filterdim, alpha, beta):
     """
@@ -22,6 +20,32 @@ def bc_e(imgA, filterdim, alpha, beta):
     filter_bright = lambda val, a, b: np.clip(a * val + b, 0, 255)
     func = np.vectorize(filter_bright)
     return func(imgA, alpha, beta)
+
+
+def GAWN(imgA):
+    """
+    adds gaussian white noise
+    :param imgA: the input image
+    :return: image corrupted with gauusian white noise
+    """
+    row, col = imgA.shape  # include ch for colour images
+    mean = 1
+    var = 0.15
+    sigma = var ** 0.5
+    gauss = np.random.normal(mean, sigma, (row, col))  #ch
+    gauss = gauss.reshape(row, col)  # ch
+    C_I = gauss + imgA
+    C_I_copy = C_I
+    gauss = 255 * (gauss / gauss.max())
+    C_I = gauss + imgA
+    C_I = np.clip(C_I, 0, 255)
+    C_I = C_I.astype(np.uint8)
+    cv2.imshow("abc", C_I)
+    cv2.waitKey()
+    print(C_I-C_I_copy)
+    print(imgA)
+    return C_I_copy
+
 
 def wavelet_transform(noisy, wavelet):
     """
@@ -76,7 +100,7 @@ def scaling(inv, filterdim):
     return invscaled
 
 
-def wavelet_denoising(img, wavelet=pywt.Wavelet('haar')):
+def wavelet_denoising(img, wavelet=pywt.Wavelet('db5')):
     """
     creates a denoised image. (default wavelet = haar)
     :param img: loaded as a numpy array
@@ -89,21 +113,17 @@ def wavelet_denoising(img, wavelet=pywt.Wavelet('haar')):
     alpha = input("enter a value between 1.00 and 3.00: ")
     beta = input("enter a value 0 and 100: ")
     filterdim = imgA.shape  # dimensions of the original image
-    corrected_img = bc_e(img, filterdim, float(alpha), int(beta))
-
+    corrupted_img = GAWN(img)
+    corrected_img = bc_e(corrupted_img, filterdim, float(alpha), int(beta))
     coeffs, LL, HH = wavelet_transform(corrected_img, wavelet)
     LL1, HH1 = VISUshrink_T(filterdim, LL, HH)
-
     unscaled_denoised = inv_wavelet_transform(LL1, HH1, wavelet=wavelet)
     denoised_image = scaling(unscaled_denoised, filterdim)
     cv2.imwrite('denoised.jpg', denoised_image)
 
 
 if __name__ == "__main__":
-    now = datetime.datetime.now()
     img = cv2.imread("DSC8.JPG", 0)
     imgA = np.asarray(img)  # imgA is the image as an Array
     wavelet_denoising(imgA)
-    later = datetime.datetime.now()
-    print(later - now)
 

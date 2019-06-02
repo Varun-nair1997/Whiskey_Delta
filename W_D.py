@@ -24,10 +24,10 @@ def noise_add(gauss, imgA):
     return noisy
 
 
-def bc_e(filterdim,alpha, beta): #brightness and contrast enhancer
+def bc_e(img,filterdim,alpha, beta): #brightness and contrast enhancer
     for y in range(filterdim[0]):
         for x in range(filterdim[1]):
-            bc_filt[y, x] = np.clip(alpha * imgA[y, x] + beta, 0, 255) #brightness and contrast filter
+            bc_filt[y, x] = np.clip(alpha * img[y, x] + beta, 0, 255) #brightness and contrast filter
             return bc_filt
 
 
@@ -74,9 +74,15 @@ def write(F): #F = filter
     return filtered
 
 
-bri_con = bc_e(filterdim,1.1,10)
-coeffs, LL1, HH1 = wvlttrns(bri_con, wavelet)
+bri_con = bc_e(imgA,filterdim,1.1,10)
+print(bri_con)
+coeffs, LL1, HH1 = wvlttrns(imgA, wavelet)
+print(coeffs,LL1,HH1)
 LL2, HH2 = VISUshrink_T(LL1,HH1,1/3)
+print(LL2,HH2)
 invM = iwvlettrns(LL2,HH2,wavelet) #invM is the reconstructed matrix
+print(invM)
 FF = scaling(invM)
-write(FF)
+cv2.imshow("filtered",FF)
+cv2.waitKey()
+#write(FF)

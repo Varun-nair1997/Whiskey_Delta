@@ -1,15 +1,10 @@
 import numpy as np
-import scipy as sp
 import cv2
-import matplotlib as plt
 import pywt
-import skimage
 
 
-img = cv2.imread("DSC1.jpeg",0)
+img = cv2.imread("DSC10.JPG",0)
 imgA = np.asarray(img)
-# imgC = cv2.equalizeHist(imgB)
-# imgA = np.stack((imgB,imgB))
 
 #Adding Noise
 row,col = imgA.shape #ch
@@ -32,8 +27,6 @@ for y in range(filterdim[0]):
 
 noisy = filter2
 
-#print(type(imgA))
-#print("imgA=", imgA)
 print(noisy.shape)
 
 #wavelet transform
@@ -59,11 +52,7 @@ HH1 = pywt.threshold(HH, THH*tscale, 'soft')
 
 #inverse transform
 inv = pywt.idwt(LL1, HH1, wavelet=wavelet)
-
-#HHscaed = cv2.resize(HH1, (simgy,simgx))
-#LLscaled = cv2.resize(LL1, (simgy,simgx))
 invscaled = cv2.resize(inv, (simgy,simgx))
-#imgscaled = cv2.resize(noisy, (simgy,simgx))
 
 filter1= invscaled #cv2.blur(invscaled,(5,5))
 
@@ -73,27 +62,10 @@ imgB = np.asarray(imgb)
 print(filterdim[1])
 
 
-#filtered = skimage.filters.wiener(inv,HH1)
-
 print("LL",LL1.shape)
 print("HH",HH1.shape)
 print(inv.shape)
 
-
-
-# cv2.imshow("noisy",(noisy))
-# cv2.waitKey()
-#
-# cv2.imshow("denoised1",(inv))
-# cv2.waitKey()
-#
-# cv2.imshow("inter",(HHscaled))
-# cv2.waitKey()
-#
-
-
-# cv2.imshow("invscal",(invscaled))
-# cv2.waitKey()
 
 cv2.imshow("abc",(imgA)) #original
 cv2.waitKey()
@@ -103,10 +75,3 @@ cv2.waitKey()
 
 cv2.imshow("pqr",(noisy)) #filter2
 cv2.waitKey()
-
-"""
-print(type.coeffs)
-print("image shape",imgA.shape)
-print("cA shape:",cA.shape)
-print("cD shape", cD.shape)
-"""

@@ -32,7 +32,7 @@ def GAWN(imgA):
     mean = 1
     var = 0.15
     sigma = var ** 0.5
-    gauss = np.random.normal(mean, sigma, (row, col))  #ch
+    gauss = np.random.normal(mean, sigma, (row, col))  # ch
     gauss = gauss.reshape(row, col)  # ch
     C_I = gauss + imgA
     C_I_copy = C_I
@@ -40,6 +40,8 @@ def GAWN(imgA):
     C_I = gauss + imgA
     C_I = np.clip(C_I, 0, 255)
     C_I = C_I.astype(np.uint8)
+    cv2.imshow("corrupted image",C_I)
+    cv2.waitKey()
     return C_I_copy
 
 
@@ -96,7 +98,7 @@ def scaling(inv, filterdim):
     return invscaled
 
 
-def wavelet_denoising(img, wavelet=pywt.Wavelet('db5')):
+def wavelet_denoising(img, wavelet=pywt.Wavelet('db4')):
     """
     creates a denoised image. (default wavelet = haar)
     :param img: loaded as a numpy array
@@ -119,7 +121,7 @@ def wavelet_denoising(img, wavelet=pywt.Wavelet('db5')):
 
 
 if __name__ == "__main__":
-    img = cv2.imread("DSC1.jpeg", 0)
-    imgA = np.asarray(img)  # imgA is the image as an Array
+    img = cv2.imread("DSC8.JPG", 0)
+    imgA = np.asarray(img)  # imgA is the image as an np Array
     wavelet_denoising(imgA)
 
